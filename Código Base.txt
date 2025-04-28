@@ -1,0 +1,57 @@
+#include <arduinoFFT.h>
+
+const int sampleSize = 64; // tamanho da amostra
+double vReal[sampleSize]; // array para armazenar parte real do sinal
+double vImag[sampleSize]; // array para armazenar parte imaginaria do sinal
+
+int adc_pin = A0; // pino ADC para ler o sinal
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  // ler o sinal da porta ADC e armazenar nas arrays
+  for (int i = 0; i < sampleSize; i++) {
+    double adcValue = analogRead(adc_pin);
+    vReal[i] = adcValue;
+    vImag[i] = 0;
+  }
+
+  // aplicar DFT a amostra
+  arduinoFFT fft = arduinoFFT();
+  fft.Windowing(vReal, sampleSize, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+  fft.Compute(vReal, vImag, sampleSize, FFT_FORWARD);
+  fft.ComplexToMagnitude(vReal, vImag, sampleSize);
+
+  double THD = 0;
+  for (int i = 1; i <= 9; i++) { // Calcula a distorção harmônica para as 9 primeiras harmônicas
+    THD += vReal[i] / vReal[1];
+  }
+  THD = (THD / 9) * 100; // Calcula o percentual de distorção harmônica
+  
+  // calcular THD considerando as 9 primeiras harmônicas
+  //float thd = 0;
+ // for (int i = 1; i <= 9; i++) {
+ //   thd += sq(vReal[i]) / vReal[0];
+ // }
+  // thd = sqrt(thd) - 1;
+
+  // imprimir THD
+  
+
+  // plotar espectro de frequencia
+  for (int i = 0; i < sampleSize / 2; i++) {
+    Serial.print(vReal[i]);
+    Serial.print(",");
+    Serial.print(vImag[i]);
+    Serial.print(",");
+    
+  Serial.print("(THD): ");
+  Serial.print(THD);
+  Serial.println("%");
+    //Serial.print("THD: ");
+   // Serial.println(thd);
+  }
+  delay(5000);
+}

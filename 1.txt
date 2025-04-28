@@ -1,0 +1,31 @@
+#include <math.h>
+
+#define N 64 // Tamanho do sinal
+
+float sinal[N]; // Vetor com os valores do sinal
+float real[N], imag[N]; // Vetores para armazenar as partes real e imaginária da DFT
+
+void DFT()
+{
+    int k, n;
+    float PI = 3.14159265358979323846;
+    float theta;
+
+    // Inicializa os vetores com partes real e imaginária da DFT como zero
+    for (k = 0; k < N; k++)
+    {
+        real[k] = 0;
+        imag[k] = 0;
+    }
+
+    // Calcula a DFT
+    for (k = 0; k < N; k++)
+    {
+        for (n = 0; n < N; n++)
+        {
+            theta = 2 * PI * k * n / N;
+            real[k] += sinal[n] * cos(theta);
+            imag[k] -= sinal[n] * sin(theta);
+        }
+    }
+}

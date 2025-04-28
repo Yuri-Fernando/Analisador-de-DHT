@@ -1,0 +1,34 @@
+// Filtro de média móvel (MAF)
+
+// variáveis para o MAF
+double x, y;
+static int buffer_size = 80;				//buffer size
+static double Ts = 2.0883333333e-4;		//sampling period
+static double pi = 3.141592;				//constant pi number
+static double buffer[80], sum_buffer;
+static int j;							//counter
+
+// inicialização de variáveis
+//if(t < 0.2)
+//{for (j = 0; j < buffer_size; j++)
+//{buffer[j] = 0;}
+//sum_buffer = 0;
+//j=0;}
+
+// ------------------------------------------------------------
+// Cálculo do RMS
+
+// variables for RMS
+static double x_rms;
+x = in[0]; 		//input signal
+x_rms = x*x; 		//squared value of input signal
+
+// MAF algorithm
+if (j == buffer_size) j = 0;
+sum_buffer += x_rms - buffer[j];
+buffer[j] = x_rms;
+
+// RMS algorithm
+y = sqrt(sum_buffer/buffer_size); 		//MAF output
+j++; //counter increment
+out[0] = y; //RMS output signal

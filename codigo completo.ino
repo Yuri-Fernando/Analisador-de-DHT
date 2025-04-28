@@ -1,0 +1,122 @@
+#include <arduinoFFT.h>
+
+const int sampleSize = 128; // tamanho da amostra
+double vReal[sampleSize]; // array para armazenar parte real do sinal
+double vImag[sampleSize]; // array para armazenar parte imaginaria do sinal
+double harmonicAmplitudes[9];   // Vetor para armazenar as amplitudes dos harmônicos
+double THD;                     // Variável para armazenar o THD
+int adc_pin = A0; // pino ADC para ler o sinal
+double distortion; // variável para armazenar a distorção harmônica total
+const int harmonicCount = 9; // número de harmônicas a serem consideradas
+double sampleFrequency = 4000;
+unsigned long t;
+unsigned long sampleTime_ms = 1000;  //tempo de amostragem em milisegundos
+
+void setup() {
+  Serial.begin(9600);
+ // t = millis();
+}
+
+void loop() {
+  // ler o sinal da porta ADC e armazenar nas arrays
+  for (int i = 0; i < sampleSize; i++) {
+   double adcValue = analogRead(adc_pin);
+   vReal[i] = adcValue;
+   vImag[i] = 0;
+ }
+
+// ler o sinal da porta ADC e armazenar nas arrays
+ // if(millis() - t > sampleTime_ms) {
+  //  // ler amostras do sinal ADC
+  //  for (int i = 0; i <  sampleSize ; i++) {
+   //     vReal[i] = analogRead(adc_pin);
+   //     vImag[i] = 0;
+   // }}
+
+  // aplicar DFT a amostra
+  arduinoFFT fft = arduinoFFT();
+  fft.Windowing(vReal, sampleSize, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+  fft.Compute(vReal, vImag, sampleSize, FFT_FORWARD);
+  fft.ComplexToMagnitude(vReal, vImag, sampleSize);
+
+  // Encontra as amplitudes dos 9 primeiros harmônicos
+ // for (int i = 0; i < 9; i++) {
+ //   harmonicAmplitudes[i] = vReal[i];
+//  }
+
+  // Calcula a THD (1)
+ // THD = 100 * sqrt(pow(harmonicAmplitudes[1], 2) + pow(harmonicAmplitudes[2], 2) + pow(harmonicAmplitudes[3], 2) + pow(harmonicAmplitudes[4], 2) + pow(harmonicAmplitudes[5], 2) + pow(harmonicAmplitudes[6], 2) + pow(harmonicAmplitudes[7], 2) + pow(harmonicAmplitudes[8], 2)) / harmonicAmplitudes[0];
+
+   // Imprime o THD
+ // Serial.print("THD: ");
+  //Serial.println(THD);
+ //  delay(5000);
+
+   //  // Calcula a THD (2)
+  distortion = 0;
+  for (int i = 2; i <= harmonicCount; i++) {
+    distortion += (sq(vReal[i]) + (vImag[i]));
+  }
+  distortion = sqrt(distortion)/vReal[1];
+  Serial.print("(THD): ");
+  Serial.print(distortion);
+  Serial.println("%");
+  delay(500);
+}
+    //t = millis();
+
+ // Calcula a THD (3)
+ // double THD = 0;
+ // for (int i = 1; i <= 9; i++) { // Calcula a distorção harmônica para as 9 primeiras harmônicas
+ //   THD += vReal[i] / vReal[1];
+ // }
+ // THD = (THD / 9) * 100; // Calcula o percentual de distorção harmônica
+  
+  // Calcula a THD (4)
+ // float thd = 0;
+ // for (int i = 1; i <= 9; i++) {
+ //  thd += sq(vReal[i]) / vReal[0];
+ //}
+ //  thd = sqrt(thd) - 1;
+
+
+  // plotar espectro de frequencia
+// for (int i = 0; i < sampleSize / 2; i++) {
+//   Serial.print(vReal[i]);
+//  Serial.println(",");
+//  delay(1000);
+ //   Serial.print(vImag[i]);
+ //   Serial.print(",");
+    
+  //Serial.print("(THD): ");
+ // Serial.print(thd);
+ // Serial.println("%");
+    //Serial.print("THD: ");
+   // Serial.println(thd);
+
+ //  / encontrar o índice da frequência fundamental
+  //  double maxValue = 0;
+   // int maxIndex = 0;
+   // for (int i = 0; i < N; i++) {
+   //     if (vReal[i] > maxValue) {
+   //         maxValue = vReal[i];
+   //         maxIndex = i;
+  //      }
+  //  }
+
+    // Calcula a THD (5)
+   // double thd = 0;
+   // for (int i = 0; i < N; i++) {
+   //     if (i != maxIndex) {
+   //         thd += vReal[i];
+   //     }
+   // }
+   // thd = thd / maxValue;
+
+    // imprimir o resultado
+   // Serial.print("THD: ");
+   // Serial.println(thd);
+   // t = millis();
+ // }
+ 
+ 

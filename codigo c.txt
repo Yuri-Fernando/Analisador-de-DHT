@@ -1,0 +1,119 @@
+ g_nStepCount++;
+
+// In case of error, uncomment next two lines. Set *pnError to 1 and copy Error message to szErrorMsg
+ //*pnError=1;
+ //strcpy(szErrorMsg, "Place Error description here.");
+ 
+//#include <stdio.h>
+
+#include <complex.h>
+
+#include <math.h>
+
+
+#define PI 3.14159265358979323846
+
+
+
+// variáveis para o MAF
+double x, y;
+static int buffer_size =200;				//buffer size
+static double Ts = 0.001;		               //sampling period
+static double pi = 3.141592;				//constant pi number
+static double buffer[200], sum_buffer;
+static int j;							//counter
+
+// inicialização de variáveis
+//if(t < 0.2)
+//{for (j = 0; j < buffer_size; j++)
+//{buffer[j] = 0;}
+//sum_buffer = 0;
+//j=0;}
+
+
+
+// Function to perform the discrete Fourier transform
+
+
+void dft(double complex* X, double complex* x, int N)
+
+{
+    
+// Loop over each frequency component
+   
+ for (int k = 0; k < N; k++)
+   
+ {
+        
+
+// Initialize the DFT sum to zero
+      
+  X[k] = 0;
+
+       
+
+ // Loop over each sample
+       
+ for (int n = 0; n < N; n++)
+      
+  {
+            
+
+// Perform the DFT sum
+           
+ X[k] += x[n] * cexp(-I * 2 * PI * k * n / N);
+    
+    }
+   
+ }
+
+}
+
+
+int main()
+
+{
+  
+  // Number of samples
+  
+ // int N = 200;
+
+   
+
+ // Input samples
+   
+ //double complex x[N] = {1, 2, 3, 4, 5};
+
+    
+
+// MAF algorithm
+ if (j == buffer_size) j = 0;
+ sum_buffer += x1 - buffer[j];
+ buffer[j] = x1;
+
+// Output array for the DFT coefficients
+   
+ double complex X[N];
+
+    
+
+// Perform the DFT
+   
+ dft(X, buffer, N);
+
+   
+
+ // Print the results
+  
+ // for (int k = 0; k < N; k++)
+   
+// {
+        
+y1=("X[%d] = %f + %fj\n", k, creal(X[k]), cimag(X[k]));
+  
+ // }
+
+ 
+  // return 0;
+
+}

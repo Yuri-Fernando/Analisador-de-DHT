@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <math.h>
+
+// Number of samples
+#define N 64
+
+// Input signal
+double x[N];
+
+// Output signal
+double X[N];
+
+// Temporary signal
+double temp[N];
+
+// Twiddle factors
+double W[N/2];
+
+void dft() {
+    int k, n;
+
+    // Calculate twiddle factors
+    for (k = 0; k < N/2; k++) {
+        W[k] = cos(2 * M_PI * k / N) + sin(2 * M_PI * k / N) * I;
+    }
+
+    // Copy input signal to temporary signal
+    for (n = 0; n < N; n++) {
+        temp[n] = x[n];
+    }
+
+    // Perform DFT
+    for (k = 0; k < N; k++) {
+        X[k] = 0;
+        for (n = 0; n < N; n++) {
+            X[k] += temp[n] * W[(k*n)%(N/2)];
+        }
+    }
+}
+
+int main() {
+    int n;
+
+    // Input signal
+    for (n = 0; n < N; n++) {
+        x[n] = sin(2 * M_PI * n / N);
+    }
+
+    // Calculate DFT
+    dft();
+
+    // Print output signal
+    for (n = 0; n < N; n++) {
+        printf("%f\n", X[n]);
+    }
+
+    return 0;
+}

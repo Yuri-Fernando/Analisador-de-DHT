@@ -1,0 +1,34 @@
+#define N 64 // número de amostras do sinal
+
+double signal[N]; // array para armazenar o sinal de entrada
+double real[N], imag[N]; // arrays para armazenar os componentes reais e imaginários da DFT
+
+void setup() {
+  Serial.begin(9600);
+  for (int i = 0; i < N; i++) {
+    signal[i] = sin(2 * PI * i / N); // gera um sinal senoidal
+  }
+}
+
+void loop() {
+  // inicializa os arrays real e imag
+  for (int i = 0; i < N; i++) {
+    real[i] = 0;
+    imag[i] = 0;
+  }
+  // calcula a DFT
+  for (int k = 0; k < N; k++) {
+    for (int n = 0; n < N; n++) {
+      real[k] += signal[n] * cos(2 * PI * k * n / N);
+      imag[k] -= signal[n] * sin(2 * PI * k * n / N);
+    }
+  }
+  // imprime os resultados da DFT no monitor serial
+  for (int i = 0; i < N; i++) {
+    Serial.print(real[i]);
+    Serial.print(" + ");
+    Serial.print(imag[i]);
+    Serial.println("i");
+  }
+  delay(1000);
+}
